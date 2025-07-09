@@ -28,7 +28,6 @@ OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
         1,
         std::bind(&OptiTrackFeedBackRigidBody::OptiTrackCallback, this, std::placeholders::_1)
     );
-    subOptiTrack = n.subscribe(name, 1, &OptiTrackFeedBackRigidBody::OptiTrackCallback,this);
     TopicName = name;
     //Initialize all velocity
     for(int i =0;i<max_windowsize;i++)
@@ -346,7 +345,7 @@ void OptiTrackFeedBackRigidBody::GetEulerAngleFromQuaterion_OptiTrackYUpConventi
 
 }
 
-void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::msg::PoseStamped& msg)
+void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::PoseStamped& msg)
 {
         // must use head information to distiguish the correct 
         OptiTrackdata = msg; // update optitrack data

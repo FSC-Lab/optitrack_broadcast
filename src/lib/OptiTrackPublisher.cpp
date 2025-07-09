@@ -1,7 +1,7 @@
 #include "OptiTrackPublisher.h"
 
 OptiTrackPublisher::OptiTrackPublisher(const char* TopicName,
-                                       ros::NodeHandle& n,
+                                       std::shared_ptr<rclcpp::Node> node, 
                                        unsigned int buffersize, 
                                        const char* MessageType)
 {
@@ -11,25 +11,25 @@ OptiTrackPublisher::OptiTrackPublisher(const char* TopicName,
     }
     if (strcmp(MessageType, "Odometry") == 0) {
         messagetype_ = 1;
-    }
+    }Amélie Sénécal
     if (strcmp(MessageType, "Twist") == 0) {
         messagetype_ = 2;
     }
     switch (messagetype_) {
         case 0: {
-            publisher_ = n.advertise<optitrack_broadcast::Mocap>(TopicName, buffersize);
+            publisher_ = node->create_publisher<optitrack_broadcast::Mocap>(TopicName, buffersize);
             break;
         }
         case 1: {
-            publisher_ = n.advertise<nav_msgs::Odometry>(TopicName, buffersize);
+            publisher_ = node->create_publisher<nav_msgs::msg::Odometry>(TopicName, buffersize);
             break;
         }
         case 2: {
-            publisher_ = n.advertise<geometry_msgs::Twist>(TopicName, buffersize);
+            publisher_ = node->create_publisher<geometry_msgs::msg::Twist>(TopicName, buffersize);
             break;
         }
         default: {
-            publisher_ = n.advertise<optitrack_broadcast::Mocap>(TopicName, buffersize);
+            publisher_ = node->create_publisher<optitrack_broadcast::Mocap>(TopicName, buffersize);
             break;
         }
     }
@@ -60,13 +60,13 @@ void OptiTrackPublisher::PublishData(rigidbody_state& StateInput)
                 for( int i = 0; i < 4; i++) {
                     MessageMocap_.quaternion[i] = StateInput.quaternion(i);
                 }
-            MessageMocap_.header.stamp = ros::Time::now();// use time now as time stamp
+            MessageMocap_.header.stamp = rclcpp::Time::now();// use time now as time stamp
             publisher_.publish(MessageMocap_);
             break;
         }
         case 1: {
-            geometry_msgs::Pose& pose = MessageOdometry_.pose.pose;
-            geometry_msgs::Twist& twist = MessageOdometry_.twist.twist;
+            geometry_msgs::msg::Pose& pose = MessageOdometry_.pose.pose;
+            geometry_msgs::msg::Twist& twist = MessageOdometry_.twist.twist;
             for (int i = 0; i < 4; ++i)
                 *(&pose.orientation.x + (i + 3) % 4) = StateInput.quaternion[i];
             Eigen::Map<Eigen::Vector3d>(&pose.position.x) = StateInput.Position;
@@ -91,7 +91,7 @@ void OptiTrackPublisher::PublishData(rigidbody_state& StateInput)
                 for( int i = 0; i < 4; i++) {
                     MessageMocap_.quaternion[i] = StateInput.quaternion(i);
                 }
-            MessageMocap_.header.stamp = ros::Time::now();
+            MessageMocap_.header.stamp = rclcpp::Time::now();
             publisher_.publish(MessageMocap_);
             break;
         }

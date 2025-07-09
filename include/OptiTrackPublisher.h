@@ -1,8 +1,8 @@
 #pragma once
-#include "ros/ros.h"
+#include <rclcpp/rclcpp.hpp>
 #include <optitrack_broadcast/Mocap.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/Twist.h>
+#include <nav_msgs/msg/odometry.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 #include <OptiTrackFeedBackRigidBody.h>
 #include <iostream>
 using namespace Eigen;
@@ -15,7 +15,7 @@ class OptiTrackPublisher{
         ~OptiTrackPublisher();
         void PublishData(rigidbody_state& StateInput);
     private:
-        ros::Publisher publisher_; 
+        rclcpp::Publisher publisher_; 
         int messagetype_;
         optitrack_broadcast::Mocap MessageMocap_;
         nav_msgs::Odometry  MessageOdometry_;   

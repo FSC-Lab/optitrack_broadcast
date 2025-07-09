@@ -1,8 +1,8 @@
 #pragma once
-#include "ros/ros.h"
+#include <rclcpp/rclcpp.hpp>
 #include "std_msgs/Empty.h"
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/PoseStamped.h"
+#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 //#include "UtilityFunctions.h"
 #include <Eigen/Eigen>
 //maximum window size
@@ -45,7 +45,7 @@ class OptiTrackFeedBackRigidBody{
     void OptiTrackCallback(const geometry_msgs::PoseStamped& msg);   
     bool FeedbackState;
     int feedback_detector_counter;
-    ros::Subscriber subOptiTrack;// OptiTrack Data
+    rclcpp::Subscription<geometry_msgs::PoseStamped> subOptiTrack;// OptiTrack Data
     const char* TopicName;
     //--------Filter Parameters-------//
     unsigned int linear_velocity_window; // window size

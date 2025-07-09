@@ -1,4 +1,4 @@
-#include "Mocap_emulator.h"
+#include "Mocap_emulator.hpp"
 
 Mocap_emulator::Mocap_emulator(const std::string& pub_topic_name,
                                const std::string& sub_topic_name,

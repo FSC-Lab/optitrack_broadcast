@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 #include <cstring>
-#include "OptiTrackFeedBackRigidBody.h"
-#include "OptiTrackPublisher.h"
+#include "OptiTrackFeedBackRigidBody.hpp"
+#include "OptiTrackPublisher.hpp"
 
 using namespace std::chrono_literals;
 

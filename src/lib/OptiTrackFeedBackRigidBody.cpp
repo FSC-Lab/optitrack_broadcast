@@ -1,4 +1,4 @@
-#include "OptiTrackFeedBackRigidBody.h"
+#include "OptiTrackFeedBackRigidBody.hpp"
 
 OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
     const char* name,

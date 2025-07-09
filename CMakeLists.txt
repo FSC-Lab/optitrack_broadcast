@@ -14,19 +14,19 @@ endif()
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(ament_cmake REQUIRED)
-find_package(message_generation REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
 # export
-ament_export_dependencies(ament_cmake message_generation rclcpp std_msgs geometry_msgs tf2_ros tf2_eigen nav_msgs)
+ament_export_dependencies(ament_cmake rclcpp std_msgs geometry_msgs tf2_ros tf2_eigen nav_msgs rosidl_default_generators)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -58,10 +58,10 @@ ament_export_dependencies(ament_cmake message_generation rclcpp std_msgs geometr
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   DIRECTORY msg # telling the location of the custom message
-   FILES
-   Mocap.msg
+## Generate added messages and services with any dependencies listed here
+rosidl_generate_interfaces(${PROJECT_NAME}
+   "msg/Mocap.msg"
+   DEPENDENCIES geometry_msgs nav_msgs std_msgs
 )
 
 ## Generate services in the 'srv' folder
@@ -77,14 +77,6 @@ add_message_files(
 #   Action1.action
 #   Action2.action
 # )
-
-## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   geometry_msgs
-   nav_msgs
-   std_msgs
-)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -122,10 +114,6 @@ include_directories(
 #   src/${PROJECT_NAME}/optitrack_broadcast.cpp
 # )
 
-add_library(OptiTrackFeedbackRigidBody src/lib/OptiTrackFeedBackRigidBody.cpp)
-add_library(OptiTrackPublisher src/lib/OptiTrackPublisher.cpp)
-add_library(Mocap_emulator src/lib/Mocap_emulator.cpp)
-
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -137,18 +125,59 @@ add_library(Mocap_emulator src/lib/Mocap_emulator.cpp)
 
 # add_executable(${PROJECT_NAME}_node src/optitrack_broadcast_node.cpp)
 
+# add_executable(broadcast_position_velocity src/broadcast_position_velocity.cpp)
+# ament_target_dependencies(broadcast_position_velocity optitrack_broadcast_generate_messages_cpp optitrack_broadcast_gencpp)
+# install(TARGETS broadcast_position_velocity DESTINATION lib/${PROJECT_NAME})
+
 add_executable(broadcast_position_velocity src/broadcast_position_velocity.cpp)
-add_dependencies(broadcast_position_velocity optitrack_broadcast_generate_messages_cpp)
-add_dependencies(broadcast_position_velocity optitrack_broadcast_gencpp)
-target_link_libraries(broadcast_position_velocity ${catkin_LIBRARIES})
-target_link_libraries(broadcast_position_velocity OptiTrackFeedbackRigidBody)
-target_link_libraries(broadcast_position_velocity OptiTrackPublisher)
+target_link_libraries(broadcast_position_velocity
+  ${rclcpp_LIBRARIES}
+  ${rosidl_default_runtime_LIBRARIES}
+  OptiTrackFeedbackRigidBody
+  OptiTrackPublisher
+)
+target_link_libraries(broadcast_position_velocity 
+  ${PROJECT_NAME}__rosidl_typesupport_cpp
+)
+ament_target_dependencies(broadcast_position_velocity rclcpp geometry_msgs)
+install(TARGETS broadcast_position_velocity DESTINATION lib/${PROJECT_NAME})
+
+# add_executable(broadcast_position_velocity src/broadcast_position_velocity.cpp)
+# add_dependencies(broadcast_position_velocity optitrack_broadcast_generate_messages_cpp)
+# add_dependencies(broadcast_position_velocity optitrack_broadcast_gencpp)
+# target_link_libraries(broadcast_position_velocity ${catkin_LIBRARIES})
+# target_link_libraries(broadcast_position_velocity OptiTrackFeedbackRigidBody)
+# target_link_libraries(broadcast_position_velocity OptiTrackPublisher)
 
 add_executable(emulator_position_velocity src/emulator_position_velocity.cpp)
-add_dependencies(emulator_position_velocity optitrack_broadcast_generate_messages_cpp)
-add_dependencies(emulator_position_velocity optitrack_broadcast_gencpp)
-target_link_libraries(emulator_position_velocity ${catkin_LIBRARIES})
-target_link_libraries(emulator_position_velocity Mocap_emulator)
+target_link_libraries(emulator_position_velocity
+  ${rclcpp_LIBRARIES}
+  ${rosidl_default_runtime_LIBRARIES}
+  Mocap_emulator
+)
+target_link_libraries(emulator_position_velocity
+  ${PROJECT_NAME}__rosidl_typesupport_cpp
+)
+ament_target_dependencies(emulator_position_velocity rclcpp geometry_msgs)
+install(TARGETS emulator_position_velocity DESTINATION lib/${PROJECT_NAME})
+
+add_library(OptiTrackFeedBackRigidBody src/lib/OptiTrackFeedBackRigidBody.cpp)
+ament_target_dependencies(OptiTrackFeedBackRigidBody rclcpp geometry_msgs)
+install(TARGETS OptiTrackFeedBackRigidBody DESTINATION lib/${PROJECT_NAME})
+
+add_library(OptiTrackPublisher src/lib/OptiTrackPublisher.cpp)
+ament_target_dependencies(OptiTrackPublisher rclcpp geometry_msgs)
+install(TARGETS OptiTrackPublisher DESTINATION lib/${PROJECT_NAME})
+
+add_library(Mocap_emulator src/lib/Mocap_emulator.cpp)
+ament_target_dependencies(Mocap_emulator rclcpp geometry_msgs)
+install(TARGETS Mocap_emulator DESTINATION lib/${PROJECT_NAME})
+
+# add_executable(emulator_position_velocity src/emulator_position_velocity.cpp)
+# add_dependencies(emulator_position_velocity optitrack_broadcast_generate_messages_cpp)
+# add_dependencies(emulator_position_velocity optitrack_broadcast_gencpp)
+# target_link_libraries(emulator_position_velocity ${catkin_LIBRARIES})
+# target_link_libraries(emulator_position_velocity Mocap_emulator)
 
 
 ## Rename C++ executable without prefix

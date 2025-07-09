@@ -21,7 +21,8 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-
+find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED)
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
@@ -162,6 +163,11 @@ ament_target_dependencies(emulator_position_velocity rclcpp geometry_msgs)
 install(TARGETS emulator_position_velocity DESTINATION lib/${PROJECT_NAME})
 
 add_library(OptiTrackFeedBackRigidBody src/lib/OptiTrackFeedBackRigidBody.cpp)
+# For your target (library or executable)
+target_include_directories(OptiTrackFeedBackRigidBody PUBLIC
+  ${EIGEN3_INCLUDE_DIRS}
+  # Your other include directories...
+)
 ament_target_dependencies(OptiTrackFeedBackRigidBody rclcpp geometry_msgs)
 install(TARGETS OptiTrackFeedBackRigidBody DESTINATION lib/${PROJECT_NAME})
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <rclcpp/rclcpp.hpp>
-#include <optitrack_broadcast/msg/Mocap.hpp>
+#include <optitrack_broadcast/msg/mocap.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <OptiTrackFeedBackRigidBody.h>

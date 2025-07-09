@@ -11,14 +11,14 @@ class Mocap_emulator{
     public:
         Mocap_emulator(const char* PubTopicName,
                        const char* SubTopicName,
-                       ros::NodeHandle& n,
+                       std::shared_ptr<rclcpp::Node> node,
                        unsigned int buffersize);
         ~Mocap_emulator();
     private:
         void PublishData();
-        void SubscribeFromGazebo(const nav_msgs::Odometry& msg);
+        void SubscribeFromGazebo(const nav_msgs::msg::Odometry& msg);
         rclcpp::Publisher<optitrack_broadcast::Mocap>SharedPtr pubmocap_;// publishing the recieved data
-        rclcpp::Subscription<nav_msgs::Odometry>SharedPtr      subgazebo_;// receiving
+        rclcpp::Subscription<nav_msgs::msg::Odometry>SharedPtr      subgazebo_;// receiving
         optitrack_broadcast::Mocap                             MessageMocap_;
         nav_msgs::Odometry                                     Drone_state_;
         Matrix3f R_IB;

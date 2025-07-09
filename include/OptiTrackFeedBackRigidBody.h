@@ -40,12 +40,12 @@ struct rigidbody_state{
 class OptiTrackFeedBackRigidBody{
 
     //-------Optitrack Related-----///
-    geometry_msgs::PoseStamped OptiTrackdata;
+    geometry_msgs::msg::PoseStamped OptiTrackdata;
     bool OptiTrackFlag; // OptiTrackState 0: no data feed,: 1 data feed present
-    void OptiTrackCallback(const geometry_msgs::PoseStamped& msg);   
+    void OptiTrackCallback(const geometry_msgs::msg::PoseStamped& msg);   
     bool FeedbackState;
     int feedback_detector_counter;
-    rclcpp::Subscription<geometry_msgs::PoseStamped> subOptiTrack;// OptiTrack Data
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped> subOptiTrack;// OptiTrack Data
     const char* TopicName;
     //--------Filter Parameters-------//
     unsigned int linear_velocity_window; // window size
@@ -68,7 +68,12 @@ class OptiTrackFeedBackRigidBody{
     //--------Update Rigid-body State ------//
     rigidbody_state state;
 public:
-    OptiTrackFeedBackRigidBody(const char* name,ros::NodeHandle& n, unsigned int linear_window, unsigned int angular_window);
+    OptiTrackFeedBackRigidBody(
+        const char* name,
+        std::shared_ptr<rclcpp::Node> node, 
+        unsigned int linear_window, 
+        unsigned int angular_window
+    );
     ~OptiTrackFeedBackRigidBody();
     int GetOptiTrackState();
     void GetState(rigidbody_state& state);

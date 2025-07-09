@@ -9,7 +9,7 @@ using namespace Eigen;
 class OptiTrackPublisher{
     public: 
         OptiTrackPublisher(const char* TopicName,
-                           ros::NodeHandle& n, 
+                           std::shared_ptr<rclcpp::Node> node, 
                            unsigned int buffersize, 
                            const char* MessageType);
         ~OptiTrackPublisher();
@@ -18,8 +18,8 @@ class OptiTrackPublisher{
         rclcpp::Publisher publisher_; 
         int messagetype_;
         optitrack_broadcast::Mocap MessageMocap_;
-        nav_msgs::Odometry  MessageOdometry_;   
-        geometry_msgs::Twist  MessageTwist_;
+        nav_msgs::msg::Odometry  MessageOdometry_;   
+        geometry_msgs::msg::Twist  MessageTwist_;
         double position[3];
         double velocity[3];
         double angular_velocity[3];

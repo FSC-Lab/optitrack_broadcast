@@ -1,23 +1,33 @@
 #include "OptiTrackFeedBackRigidBody.h"
 
-OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(const char* name,ros::NodeHandle& n,unsigned int linear_window, unsigned int angular_window)
+OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
+    const char* name,
+    std::shared_ptr<rclcpp::Node> node, 
+    unsigned int linear_window, 
+    unsigned int angular_window
+)
 {
     // load filter window size
     linear_velocity_window = linear_window;
     angular_velocity_window = angular_window;
     if(linear_velocity_window>max_windowsize)
     {
-        ROS_INFO("Linear Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
-        ROS_INFO("Input Valude is [%d]",linear_velocity_window);
+        RCLCPP_INFO("Linear Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
+        RCLCPP_INFO("Input Valude is [%d]",linear_velocity_window);
         linear_velocity_window = max_windowsize;
     }
     if(angular_velocity_window>max_windowsize)
     {
-        ROS_INFO("Angular Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
-        ROS_INFO("Input Valude is [%d]",angular_velocity_window);
+        RCLCPP_INFO("Angular Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
+        RCLCPP_INFO("Input Valude is [%d]",angular_velocity_window);
         angular_velocity_window = max_windowsize;
     }
     // set up subscriber to vrpn optitrack beedback
+    subOptiTrack = node->create_subscription<geometry_msgs::msg::PoseStamped>( 
+        name,
+        1,
+        std::bind(&OptiTrackFeedBackRigidBody::OptiTrackCallback, this, std::placeholders::_1)
+    );
     subOptiTrack = n.subscribe(name, 1, &OptiTrackFeedBackRigidBody::OptiTrackCallback,this);
     TopicName = name;
     //Initialize all velocity
@@ -336,7 +346,7 @@ void OptiTrackFeedBackRigidBody::GetEulerAngleFromQuaterion_OptiTrackYUpConventi
 
 }
 
-void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::PoseStamped& msg)
+void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::msg::PoseStamped& msg)
 {
         // must use head information to distiguish the correct 
         OptiTrackdata = msg; // update optitrack data

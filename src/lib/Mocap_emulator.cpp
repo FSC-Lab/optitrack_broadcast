@@ -1,13 +1,18 @@
 #include "Mocap_emulator.h"
 
-Mocap_emulator::Mocap_emulator(const char* PubTopicName,
-                               const char* SubTopicName,
-                               ros::NodeHandle& n,
-                               unsigned int buffersize)
+Mocap_emulator::Mocap_emulator(const std::string& pub_topic_name,
+                               const std::string& sub_topic_name,
+                               std::shared_ptr<rclcpp::Node> node,
+                               size_t queue_size)
 {
-    pubmocap_ = n.advertise<optitrack_broadcast::Mocap>(PubTopicName, buffersize);
-    subgazebo_ = n.subscribe(SubTopicName, buffersize, &Mocap_emulator::SubscribeFromGazebo,this);
+    pubmocap_ = node->create_publisher<optitrack_broadcast::Mocap>(pub_topic_name, queue_size);
+
+    subgazebo_ = node->create_subscription<geometry_msgs::msg::PoseStamped>(
+        sub_topic_name,
+        queue_size,
+        std::bind(&Mocap_emulator::SubscribeFromGazebo, this, std::placeholders::_1));
 }
+
 Mocap_emulator::~Mocap_emulator()
 {
 
@@ -46,7 +51,7 @@ void Mocap_emulator::PublishData()
     MessageMocap_.header = Drone_state_.header;
     pubmocap_.publish(MessageMocap_);
 }
-void Mocap_emulator::SubscribeFromGazebo(const nav_msgs::Odometry& msg)
+void Mocap_emulator::SubscribeFromGazebo(const nav_msgs::msg::Odometry& msg)
 {
     // waiting for plugin message
     Drone_state_ = msg;

@@ -198,8 +198,7 @@ Eigen::Matrix3f QuaterionToRotationMatrix(const Eigen::Vector4f& quaternion) {
     pose[1].q2 = OptiTrackdata.pose.orientation.y;
     pose[1].q3 = OptiTrackdata.pose.orientation.z;
     
-    //update the auxiliary matrix
-    /*
+    update the auxiliary matrix
     L = [-q1 q0 q3 -q2;
          -q2 -q3 q0 q1;
          -q3 q2 -q1 q0]

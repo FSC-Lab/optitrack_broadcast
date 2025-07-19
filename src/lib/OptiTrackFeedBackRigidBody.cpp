@@ -10,16 +10,16 @@ OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
     // load filter window size
     linear_velocity_window = linear_window;
     angular_velocity_window = angular_window;
-    if(linear_velocity_window>max_windowsize)
+    if(linear_velocity_window > max_windowsize)
     {
-        RCLCPP_INFO("Linear Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
-        RCLCPP_INFO("Input Valude is [%d]",linear_velocity_window);
+        RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Linear Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
+        RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Input Valude is [%d]",linear_velocity_window);
         linear_velocity_window = max_windowsize;
     }
-    if(angular_velocity_window>max_windowsize)
+    if(angular_velocity_window > max_windowsize)
     {
-        RCLCPP_INFO("Angular Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
-        RCLCPP_INFO("Input Valude is [%d]",angular_velocity_window);
+        RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Angular Velocity Window Size Overlimit, Max Value is [%d]",max_windowsize);
+        RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Input Valude is [%d]",angular_velocity_window);
         angular_velocity_window = max_windowsize;
     }
     // set up subscriber to vrpn optitrack beedback
@@ -119,7 +119,7 @@ void OptiTrackFeedBackRigidBody::PushPose()
 {
     pose[0] = pose[1];// straightforward push the pose into buffer
     // update the latest pose
-    double t_current = (double)OptiTrackdata.header.stamp.sec + (double)OptiTrackdata.header.stamp.nsec*0.000000001;
+    double t_current = (double)OptiTrackdata.header.stamp.sec + (double)OptiTrackdata.header.stamp.nanosec*0.000000001;
     pose[1].t = t_current;
     // take a special note at the order of the quaterion
     pose[1].q0 = OptiTrackdata.pose.orientation.w;
@@ -182,17 +182,17 @@ void OptiTrackFeedBackRigidBody::PushRawVelocity(Vector3d& new_linear_velocity, 
      * secondly a(N) = a_new
     */
    // linear velocitydfd
-    for(int i = 1;i<linear_velocity_window;i++)//first step
+    for(unsigned int i = 1; i < linear_velocity_window; i++)//first step
     {
         velocity_raw[i-1] = velocity_raw[i];
     }
-    velocity_raw[linear_velocity_window-1] = new_linear_velocity;// second step update the last variable in the velocity buffer
+    velocity_raw[linear_velocity_window - 1] = new_linear_velocity;// second step update the last variable in the velocity buffer
     // angular velocity
-    for(int i = 1;i<angular_velocity_window;i++)//first step
+    for(unsigned int i = 1;i<angular_velocity_window;i++)//first step
     {
         angular_velocity_raw[i-1] = angular_velocity_raw[i];
     }
-    angular_velocity_raw[angular_velocity_window-1] = new_angular_velocity;// second step update the last variable in the velocity buffer   
+    angular_velocity_raw[angular_velocity_window - 1] = new_angular_velocity;// second step update the last variable in the velocity buffer   
 }
 
 void OptiTrackFeedBackRigidBody::MovingWindowAveraging()
@@ -200,19 +200,19 @@ void OptiTrackFeedBackRigidBody::MovingWindowAveraging()
 
     /* Logic: Average the raw velocity measurement in the
     */
-    double weight_linear = (double)1/linear_velocity_window;// the weight on each velocity to be summed up.
-    double weight_angular = (double)1/angular_velocity_window;// the weight on each velocity to be summed up.
+    double weight_linear = (double)1 / linear_velocity_window;// the weight on each velocity to be summed up.
+    double weight_angular = (double)1 / angular_velocity_window;// the weight on each velocity to be summed up.
     // create a temporary variable to store the summed velocity and initialize it witht the 1st buffer value
     Vector3d velocitytemp;
     Vector3d angular_velocitytemp;
     velocitytemp = weight_linear*velocity_raw[0];
     angular_velocitytemp = weight_angular*angular_velocity_raw[0];
 
-    for(int i = 1;i<linear_velocity_window;i++)// sum starts from the second buffer value
+    for(unsigned int i = 1; i < linear_velocity_window; i++)// sum starts from the second buffer value
     {
         velocitytemp += weight_linear*velocity_raw[i];
     }
-    for(int i = 1;i<angular_velocity_window;i++)// sum starts from the second buffer value
+    for(unsigned int i = 1; i < angular_velocity_window; i++)// sum starts from the second buffer value
     {
         angular_velocitytemp += weight_angular*angular_velocity_raw[i];
     }
@@ -248,24 +248,24 @@ void OptiTrackFeedBackRigidBody::GetRaWVelocity(Vector3d& linear_velocity,Vector
 }
 void  OptiTrackFeedBackRigidBody::SetZeroVelocity()
 {
-    for(int i =0;i<linear_velocity_window;i++)
+    for(unsigned int i = 0; i < linear_velocity_window; i++)
     {
-        velocity_raw[i](0)=0;
-        velocity_raw[i](1)=0;
-        velocity_raw[i](2)=0;
+        velocity_raw[i](0) = 0;
+        velocity_raw[i](1) = 0;
+        velocity_raw[i](2) = 0;
     }
-    for(int i =0;i<angular_velocity_window;i++)
+    for(unsigned int i = 0; i < angular_velocity_window; i++)
     {
-        angular_velocity_raw[i](0)=0;
-        angular_velocity_raw[i](1)=0;
-        angular_velocity_raw[i](2)=0;
+        angular_velocity_raw[i](0) = 0;
+        angular_velocity_raw[i](1) = 0;
+        angular_velocity_raw[i](2) = 0;
     }
-    velocity_filtered(0)=0;
-    velocity_filtered(1)=0;
-    velocity_filtered(2)=0;
-    angular_velocity_filtered(0) =0;
-    angular_velocity_filtered(1) =0;
-    angular_velocity_filtered(2) =0;
+    velocity_filtered(0) = 0;
+    velocity_filtered(1) = 0;
+    velocity_filtered(2) = 0;
+    angular_velocity_filtered(0) = 0;
+    angular_velocity_filtered(1) = 0;
+    angular_velocity_filtered(2) = 0;
 }
 
 void OptiTrackFeedBackRigidBody::RosWhileLoopRun()
@@ -275,12 +275,12 @@ void OptiTrackFeedBackRigidBody::RosWhileLoopRun()
 int OptiTrackFeedBackRigidBody::GetOptiTrackState()
 {
     if (FeedbackState==true) {
-      ROS_INFO("OptiTrack:Normal");
+      RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "OptiTrack:Normal");
     }else{
-      ROS_INFO("OptiTrack:No FeedBack");
+      RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "OptiTrack:No FeedBack");
     }
-    ROS_INFO("Linear Velocity Filter Window Size is [%d]",linear_velocity_window);
-    ROS_INFO("Angular Velocity Filter Window Size is [%d]",angular_velocity_window);
+    RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Linear Velocity Filter Window Size is [%d]",linear_velocity_window);
+    RCLCPP_INFO(rclcpp::get_logger("broadcast_position_velocity"), "Angular Velocity Filter Window Size is [%d]",angular_velocity_window);
     return FeedbackState;
 }
 void OptiTrackFeedBackRigidBody::GetEulerAngleFromQuaterion_NormalConvention(double (&eulerangle)[3])
@@ -345,7 +345,7 @@ void OptiTrackFeedBackRigidBody::GetEulerAngleFromQuaterion_OptiTrackYUpConventi
 
 }
 
-void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::PoseStamped& msg)
+void OptiTrackFeedBackRigidBody::OptiTrackCallback(const geometry_msgs::msg::PoseStamped& msg)
 {
         // must use head information to distiguish the correct 
         OptiTrackdata = msg; // update optitrack data

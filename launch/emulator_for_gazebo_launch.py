@@ -7,7 +7,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'objects',
-            default_value='UAV0 UAV1 UAV2 Payload',
+            default_value='x500_0',
             description='List of objects to track'
         ),
         

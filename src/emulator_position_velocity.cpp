@@ -6,7 +6,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "Eigen/Eigen"
-#include "mocap_emulator.hpp"
+#include "Mocap_emulator.hpp"
 
 struct SubTopic
 {
@@ -39,23 +39,19 @@ int main(int argc, char **argv)
         RCLCPP_INFO(node->get_logger(), "++++++++RECEIVEING GAZEBO PLUGIN INFO FROM THE FOLLOWING TOPICS:++++++++");
         
         for (int i = 1; i < argc; i++) {
-            SubTopic SubTopic;
-            PubTopic PubTopic;
-
-            strcpy(SubTopic.str, "/gazebo_ground_truth_");
-            strcat(SubTopic.str, argv[i]);
-            
-            strcpy(PubTopic.str, "/mocap/");
-            strcat(PubTopic.str, argv[i]);
+            // SubTopic SubTopic;
+            // PubTopic PubTopic;
+            std::string subTopic = "/model/" + std::string(argv[i]) + "/odometry";
+            std::string pubTopic = "/mocap/" + std::string(argv[i]);
             
             RCLCPP_INFO(node->get_logger(), "%s publish emulated data to: %s", 
-                        SubTopic.str, PubTopic.str);
+                        subTopic, pubTopic);
             
             /* create an optitrack instance in the heap and push the pointer into the container */
             EmulatorList.emplace_back(
                 std::make_unique<Mocap_emulator>(
-                    PubTopic.str, 
-                    SubTopic.str, 
+                    pubTopic, 
+                    subTopic, 
                     node, 
                     static_cast<int>(frequency)
                 )

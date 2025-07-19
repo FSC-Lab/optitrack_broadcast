@@ -56,14 +56,19 @@ public:
 
                 // Initialize mocap message
                 optitrack_broadcast::msg::Mocap init_mocap;
-                for (int j = 0; j < 3; j++) {
-                    init_mocap.position[j] = 0;
-                    init_mocap.velocity[j] = 0;
-                    init_mocap.angular_velocity[j] = 0;
-                }
-                for (int j = 0; j < 4; j++) {
-                    init_mocap.quaternion[j] = init_state.quaternion(j);
-                }
+                init_mocap.pose.position.x = 0;
+                init_mocap.pose.position.y = 0;
+                init_mocap.pose.position.z = 0;
+                init_mocap.twist.linear.x = 0;
+                init_mocap.twist.linear.y = 0;
+                init_mocap.twist.linear.z = 0;
+                init_mocap.twist.angular.x = 0;
+                init_mocap.twist.angular.y = 0;
+                init_mocap.twist.angular.z = 0;
+                init_mocap.pose.orientation.w = init_state.quaternion(0);
+                init_mocap.pose.orientation.x = init_state.quaternion(1);
+                init_mocap.pose.orientation.y = init_state.quaternion(2);
+                init_mocap.pose.orientation.z = init_state.quaternion(3);
                 mocap_message_list_.push_back(init_mocap);
 
                 // Create publisher topic
@@ -72,7 +77,7 @@ public:
                 strcat(pub_topic.str, argv[i]);
                 pub_list_.emplace_back(
                     std::make_unique<OptiTrackPublisher>(
-                        pub_topic.str, this->shared_from_this(), 1000, msg_type_.c_str()));
+                        pub_topic.str, this->shared_from_this(), 1000));
                 
                 RCLCPP_INFO(this->get_logger(), "%s publish processed data to: %s", 
                             topic.str, pub_topic.str);

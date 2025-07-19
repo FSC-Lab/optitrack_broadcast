@@ -45,7 +45,7 @@ class OptiTrackFeedBackRigidBody{
     void OptiTrackCallback(const geometry_msgs::msg::PoseStamped& msg);   
     bool FeedbackState;
     int feedback_detector_counter;
-    rclcpp::Subscription<geometry_msgs::msg::PoseStamped> subOptiTrack;// OptiTrack Data
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subOptiTrack;// OptiTrack Data
     const char* TopicName;
     //--------Filter Parameters-------//
     unsigned int linear_velocity_window; // window size

@@ -26,33 +26,6 @@ find_package(Eigen3 REQUIRED)
 # System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
-<<<<<<< HEAD
-rosidl_generate_interfaces(${PROJECT_NAME}
-   "msg/Mocap.msg"
-   DEPENDENCIES geometry_msgs nav_msgs std_msgs
-)
-
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
-# add message
-rosidl_get_typesupport_target(
-  cpp_typesupport_target
-  ${PROJECT_NAME} 
-  rosidl_typesupport_cpp
-)
-
-# add mocap_emulator.cpp
-add_library(Mocap_emulator src/lib/Mocap_emulator.cpp)
-target_link_libraries(Mocap_emulator 
-  ${cpp_typesupport_target} 
-  Eigen3::Eigen
-)  
-ament_target_dependencies(Mocap_emulator rclcpp geometry_msgs nav_msgs gz-msgs10)
-install(TARGETS Mocap_emulator DESTINATION lib/${PROJECT_NAME})
-=======
 set(_ob_deps
     ament_cmake
     rclcpp
@@ -75,33 +48,22 @@ rosidl_generate_interfaces(${PROJECT_NAME} "msg/Mocap.msg" DEPENDENCIES
 
 rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}
                               rosidl_typesupport_cpp)
->>>>>>> 8854fd88b5a4562fa1d5b9b98226d5e1a28b70ed
 
 # add optitrackFeedBackRigidBody.cpp
 add_library(OptiTrackFeedBackRigidBody src/lib/OptiTrackFeedBackRigidBody.cpp)
-<<<<<<< HEAD
 target_link_libraries(OptiTrackFeedBackRigidBody 
   ${cpp_typesupport_target} 
   Eigen3::Eigen
 )
-=======
-target_link_libraries(OptiTrackFeedBackRigidBody ${cpp_typesupport_target}
-                      Eigen3::Eigen)
->>>>>>> 8854fd88b5a4562fa1d5b9b98226d5e1a28b70ed
 target_include_directories(OptiTrackFeedBackRigidBody PUBLIC include/)
 ament_target_dependencies(OptiTrackFeedBackRigidBody rclcpp geometry_msgs)
 
 # add optitrackPublisher.cpp
 add_library(OptiTrackPublisher src/lib/OptiTrackPublisher.cpp)
-<<<<<<< HEAD
 target_link_libraries(OptiTrackPublisher 
   ${cpp_typesupport_target} 
   Eigen3::Eigen
 )
-=======
-target_link_libraries(OptiTrackPublisher ${cpp_typesupport_target}
-                      Eigen3::Eigen)
->>>>>>> 8854fd88b5a4562fa1d5b9b98226d5e1a28b70ed
 target_include_directories(OptiTrackPublisher PUBLIC include/)
 ament_target_dependencies(OptiTrackPublisher rclcpp geometry_msgs)
 
@@ -113,25 +75,7 @@ target_link_libraries(
   OptiTrackPublisher)
 target_link_libraries(broadcast_position_velocity ${cpp_typesupport_target})
 ament_target_dependencies(broadcast_position_velocity rclcpp geometry_msgs)
-<<<<<<< HEAD
-install(TARGETS broadcast_position_velocity DESTINATION lib/${PROJECT_NAME})
 
-# add emulator_position_velocity.cpp
-add_executable(emulator_position_velocity src/emulator_position_velocity.cpp)
-target_link_libraries(emulator_position_velocity
-  ${rclcpp_LIBRARIES}
-  ${rosidl_default_runtime_LIBRARIES}
-  Mocap_emulator
-)
-target_link_libraries(emulator_position_velocity
-  ${cpp_typesupport_target}
-)
-ament_target_dependencies(emulator_position_velocity rclcpp geometry_msgs)
-install(TARGETS emulator_position_velocity DESTINATION lib/${PROJECT_NAME})
-
-# export
-ament_export_dependencies(ament_cmake rclcpp std_msgs rosidl_default_runtime eigen3_cmake_module Eigen3 px4_msgs geometry_msgs sensor_msgs tf2_ros tf2_eigen nav_msgs gz-msgs10 eigen3_cmake_module Eigen3)
-=======
 
 set(_ob_targets OptiTrackFeedBackRigidBody OptiTrackPublisher
                 broadcast_position_velocity)
@@ -157,6 +101,5 @@ endif()
 install(TARGETS ${_ob_targets} DESTINATION ${PROJECT_NAME})
 
 install(FILES package.xml DESTINATION share/${PROJECT_NAME})
->>>>>>> 8854fd88b5a4562fa1d5b9b98226d5e1a28b70ed
 
 ament_package()

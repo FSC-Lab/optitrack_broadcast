@@ -133,21 +133,22 @@ Eigen::VectorXf constrain_vector(const Eigen::VectorXf& input, float Max_norm)
 }
 
 //sign_function
-float sign_function(float data)
-{
-    if(data>0)
-    {
-        return 1.0;
-    }
-    else if(data<0)
-    {
-        return -1.0;
-    }
-    else if(data == 0)
-    {
-        return 0.0;
-    }
-}
+// NOTE: Unused, but kept for reference; replace with std::copysign if needed
+// float sign_function(float data)
+// {
+//     if(data>0)
+//     {
+//         return 1.0;
+//     }
+//     else if(data<0)
+//     {
+//         return -1.0;
+//     }
+//     else if(data == 0)
+//     {
+//         return 0.0;
+//     }
+// }
 
 // min function
 float min(float data1,float data2) {

@@ -13,22 +13,22 @@ def generate_launch_description():
         ),
 
         # VRPN Client Node
-        Node(
-            package='vrpn_client_ros',
-            executable='vrpn_client_node',
-            name='vrpn_client_node',
-            parameters=[{
-                'server': LaunchConfiguration('server'),
-                'port': 3883,
-                'update_frequency': 100.0,
-                'frame_id': 'world',
-                'use_server_time': False,
-                'broadcast_tf': True,
-                'refresh_tracker_frequency': 1.0,
-                # 'trackers': ['FirstTracker', 'SecondTracker']
-            }],
-            output='screen'
-        ),
+        # Node(
+        #     package='vrpn_mocap',
+        #     executable='vrpn_client_node',
+        #     name='vrpn_client_node',
+        #     parameters=[{
+        #         'server': LaunchConfiguration('server'),
+        #         'port': 3883,
+        #         'update_frequency': 100.0,
+        #         'frame_id': 'world',
+        #         'use_server_time': False,
+        #         'broadcast_tf': True,
+        #         'refresh_tracker_frequency': 1.0,
+        #         # 'trackers': ['FirstTracker', 'SecondTracker']
+        #     }],
+        #     output='screen'
+        # ),
 
         # Optitrack Broadcast Node
         Node(

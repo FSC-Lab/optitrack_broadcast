@@ -45,7 +45,7 @@ int main(int argc, char **argv)
             std::string pubTopic = "/mocap/" + std::string(argv[i]);
             
             RCLCPP_INFO(node->get_logger(), "%s publish emulated data to: %s", 
-                        subTopic, pubTopic);
+                        subTopic.c_str(), pubTopic.c_str());
             
             /* create an optitrack instance in the heap and push the pointer into the container */
             EmulatorList.emplace_back(

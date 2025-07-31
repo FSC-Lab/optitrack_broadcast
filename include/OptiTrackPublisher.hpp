@@ -9,7 +9,7 @@ using namespace Eigen;
 class OptiTrackPublisher{
     public: 
         OptiTrackPublisher(const char* TopicName,
-                           std::shared_ptr<rclcpp::Node> node, 
+                           rclcpp::Node& node, 
                            unsigned int buffersize);
         ~OptiTrackPublisher();
         void PublishData(rigidbody_state& StateInput);

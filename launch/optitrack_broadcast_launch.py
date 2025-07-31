@@ -36,6 +36,6 @@ def generate_launch_description():
             executable='broadcast_position_velocity',
             name='broadcast_1',
             output='screen',
-            arguments=['UAV', 'cf1', 'cf2', 'cf3', 'cf4', 'cf5']
+            arguments=['UAV0']
         )
     ])

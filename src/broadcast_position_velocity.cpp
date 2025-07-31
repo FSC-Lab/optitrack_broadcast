@@ -33,21 +33,22 @@ public:
         num_channels_ = argc - 1;
 
         // Must have at least 1 input argument for topic name
-        if (argc > 1) {
+        if (argc > -1) {
             RCLCPP_INFO(this->get_logger(), "++++++++RECEIVEING MOCAP INFO FROM THE FOLLOWING TOPICS:++++++++");
             
             for (int i = 1; i < argc; i++) {
                 // Create subscriber topic
                 SubTopic topic;
-                strcpy(topic.str, "/vrpn_client_node/");
+                strcpy(topic.str, "/vrpn_mocap/");
                 strcat(topic.str, argv[i]);
                 strcat(topic.str, "/pose");
                 topic_list_.push_back(topic);
-                
+                std::cout << topic.str << "-------\n";
+
                 // Create OptiTrack feedback instance
                 mocap_list_.emplace_back(
                     std::make_unique<OptiTrackFeedBackRigidBody>(
-                        topic.str, this->shared_from_this(), 3, 3));
+                        topic.str, *this, 3, 3));
                 
                 // Initialize state
                 rigidbody_state init_state;
@@ -77,7 +78,7 @@ public:
                 strcat(pub_topic.str, argv[i]);
                 pub_list_.emplace_back(
                     std::make_unique<OptiTrackPublisher>(
-                        pub_topic.str, this->shared_from_this(), 1000));
+                        pub_topic.str, *this, 1000));
                 
                 RCLCPP_INFO(this->get_logger(), "%s publish processed data to: %s", 
                             topic.str, pub_topic.str);
@@ -114,6 +115,7 @@ private:
                     is_feedback_state_changed = true;
                 }
                 
+                std::cout << rigidbody_state_list_[k].Position << "----------\n";
                 pub_list_[k]->PublishData(rigidbody_state_list_[k]);
             }
         }

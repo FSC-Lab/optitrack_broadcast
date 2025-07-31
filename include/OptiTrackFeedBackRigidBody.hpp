@@ -70,7 +70,7 @@ class OptiTrackFeedBackRigidBody{
 public:
     OptiTrackFeedBackRigidBody(
         const char* name,
-        std::shared_ptr<rclcpp::Node> node, 
+        rclcpp::Node& node, 
         unsigned int linear_window, 
         unsigned int angular_window
     );

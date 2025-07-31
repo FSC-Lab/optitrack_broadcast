@@ -2,7 +2,7 @@
 
 OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
     const char* name,
-    std::shared_ptr<rclcpp::Node> node, 
+    rclcpp::Node& node, 
     unsigned int linear_window, 
     unsigned int angular_window
 )
@@ -23,9 +23,11 @@ OptiTrackFeedBackRigidBody::OptiTrackFeedBackRigidBody(
         angular_velocity_window = max_windowsize;
     }
     // set up subscriber to vrpn optitrack beedback
-    subOptiTrack = node->create_subscription<geometry_msgs::msg::PoseStamped>( 
+    auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
+    qos.best_effort();  // Set reliability to BEST_EFFORT
+    subOptiTrack = node.create_subscription<geometry_msgs::msg::PoseStamped>( 
         name,
-        1,
+        qos,
         std::bind(&OptiTrackFeedBackRigidBody::OptiTrackCallback, this, std::placeholders::_1)
     );
     TopicName = name;

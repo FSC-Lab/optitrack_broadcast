@@ -1,10 +1,10 @@
 #include "OptiTrackPublisher.hpp"
 
 OptiTrackPublisher::OptiTrackPublisher(const char* TopicName,
-                                       std::shared_ptr<rclcpp::Node> node, 
+                                       rclcpp::Node& node, 
                                        unsigned int buffersize)
 {
-    publisher_ = node->create_publisher<optitrack_broadcast::msg::Mocap>(TopicName, buffersize);
+    publisher_ = node.create_publisher<optitrack_broadcast::msg::Mocap>(TopicName, buffersize);
 }
 OptiTrackPublisher::~OptiTrackPublisher()
 {

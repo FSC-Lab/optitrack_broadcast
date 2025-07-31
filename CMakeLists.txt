@@ -69,36 +69,21 @@ ament_target_dependencies(OptiTrackPublisher rclcpp geometry_msgs)
 
 # add broadcast_position_velocity.cpp
 add_executable(broadcast_position_velocity src/broadcast_position_velocity.cpp)
-target_link_libraries(
-  broadcast_position_velocity ${rclcpp_LIBRARIES}
-  ${rosidl_default_runtime_LIBRARIES} OptiTrackFeedBackRigidBody
-  OptiTrackPublisher)
+target_link_libraries(broadcast_position_velocity 
+  ${rclcpp_LIBRARIES}
+  ${rosidl_default_runtime_LIBRARIES} 
+  OptiTrackFeedBackRigidBody
+  OptiTrackPublisher
+)
 target_link_libraries(broadcast_position_velocity ${cpp_typesupport_target})
 ament_target_dependencies(broadcast_position_velocity rclcpp geometry_msgs)
 
-
-set(_ob_targets OptiTrackFeedBackRigidBody OptiTrackPublisher
-                broadcast_position_velocity)
-
-if(OB_WITH_GAZEBO)
-  add_library(Mocap_emulator src/lib/Mocap_emulator.cpp)
-  target_include_directories(Mocap_emulator PUBLIC include/)
-  target_link_libraries(Mocap_emulator ${cpp_typesupport_target} Eigen3::Eigen)
-  ament_target_dependencies(Mocap_emulator rclcpp geometry_msgs nav_msgs
-                            gz-msgs10)
-
-  add_executable(emulator_position_velocity src/emulator_position_velocity.cpp)
-  target_link_libraries(emulator_position_velocity ${rclcpp_LIBRARIES}
-                        ${rosidl_default_runtime_LIBRARIES} Mocap_emulator)
-  target_link_libraries(emulator_position_velocity ${cpp_typesupport_target}
-                        Eigen3::Eigen)
-  ament_target_dependencies(emulator_position_velocity rclcpp geometry_msgs)
-
-  list(APPEND _ob_targets Mocap_emulator emulator_position_velocity)
-
-endif()
-
-install(TARGETS ${_ob_targets} DESTINATION ${PROJECT_NAME})
+set(_ob_list
+  OptiTrackFeedBackRigidBody
+  OptiTrackPublisher
+  broadcast_position_velocity
+)
+install(TARGETS ${_ob_list} DESTINATION lib/${PROJECT_NAME})
 
 install(FILES package.xml DESTINATION share/${PROJECT_NAME})
 

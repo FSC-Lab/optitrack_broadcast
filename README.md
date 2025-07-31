@@ -22,17 +22,11 @@ The OptiTrack node shall be download and installed on the ground station desktop
 > 3. $ cd ../..
 > 4. $ catkin build
 
-- For gazebo simulations, please use `emulator_for_gazebo.launch` to generate simulated position and velocity data stream.
+- For gazebo simulations, please check https://github.com/FSC-Lab/gz_optitrack_ros2_emulator.
 
-- For flight experiments, please use `optitrack_broadcast_p300.launch` to obtain the position and velocity measurements. 
+- For flight experiments, please use `optitrack_broadcast_launch.py` to obtain the position and velocity measurements. 
 
 - Adjust the arguments in the pkg node based on the rigid bodies defined in Motive software to get corresponding feedbacks.
-
-**For Gazebo simulations:**
-
->Adjust the argument `"objects"` according to the names of the rigid bodies defined in Motive software in the following XML node:
-`<arg  name="objects"  default="UAV0 UAV1 UAV2 Payload"/>`
-The default name list is `"UAV0 , UAV1, UAV2, Payload"`.
 
 **For flight experiments:**
 >Make sure that the IP address of the desktop running the Motive software is correct. The IP address is specified in

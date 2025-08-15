@@ -56,7 +56,7 @@ public:
                 rigidbody_state_list_.push_back(init_state);
 
                 // Initialize mocap message
-                optitrack_broadcast::msg::Mocap init_mocap;
+                fsc_autopilot_ros2_msgs::msg::Mocap init_mocap;
                 init_mocap.pose.position.x = 0;
                 init_mocap.pose.position.y = 0;
                 init_mocap.pose.position.z = 0;
@@ -144,7 +144,7 @@ private:
     std::vector<std::unique_ptr<OptiTrackFeedBackRigidBody>> mocap_list_;
     std::vector<std::unique_ptr<OptiTrackPublisher>> pub_list_;
     std::vector<rigidbody_state> rigidbody_state_list_;
-    std::vector<optitrack_broadcast::msg::Mocap> mocap_message_list_;
+    std::vector<fsc_autopilot_ros2_msgs::msg::Mocap> mocap_message_list_;
     
     int num_channels_;
     int notfeedbackcounter_;

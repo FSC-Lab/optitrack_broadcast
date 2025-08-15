@@ -1,6 +1,6 @@
 #pragma once
 #include <rclcpp/rclcpp.hpp>
-#include "optitrack_broadcast/msg/mocap.hpp"
+#include "fsc_autopilot_ros2_msgs/msg/mocap.hpp"
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include "OptiTrackFeedBackRigidBody.hpp"
@@ -15,9 +15,9 @@ class OptiTrackPublisher{
         void PublishData(rigidbody_state& StateInput);
     private:
         
-        rclcpp::Publisher<optitrack_broadcast::msg::Mocap>::SharedPtr publisher_; 
+        rclcpp::Publisher<fsc_autopilot_ros2_msgs::msg::Mocap>::SharedPtr publisher_;
         int messagetype_;
-        optitrack_broadcast::msg::Mocap MessageMocap_;
+        fsc_autopilot_ros2_msgs::msg::Mocap MessageMocap_;
         nav_msgs::msg::Odometry  MessageOdometry_;   
         geometry_msgs::msg::Twist  MessageTwist_;
         double position[3];

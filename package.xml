@@ -11,6 +11,7 @@
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>fsc_autopilot_ros2_msgs</depend>
   <depend>Eigen3</depend>
   <depend>eigen3_cmake_module</depend>  
   <build_depend>libeigen3-dev</build_depend>  

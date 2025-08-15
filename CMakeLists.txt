@@ -21,6 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(fsc_autopilot_ros2_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 # System dependencies are found with CMake's conventions
@@ -43,40 +44,27 @@ endif()
 # export
 ament_export_dependencies(${_ob_deps})
 
-rosidl_generate_interfaces(${PROJECT_NAME} "msg/Mocap.msg" DEPENDENCIES
-                           geometry_msgs nav_msgs std_msgs)
-
-rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}
-                              rosidl_typesupport_cpp)
 
 # add optitrackFeedBackRigidBody.cpp
 add_library(OptiTrackFeedBackRigidBody src/lib/OptiTrackFeedBackRigidBody.cpp)
-target_link_libraries(OptiTrackFeedBackRigidBody 
-  ${cpp_typesupport_target} 
-  Eigen3::Eigen
-)
+target_link_libraries(OptiTrackFeedBackRigidBody Eigen3::Eigen)
 target_include_directories(OptiTrackFeedBackRigidBody PUBLIC include/)
-ament_target_dependencies(OptiTrackFeedBackRigidBody rclcpp geometry_msgs)
+ament_target_dependencies(OptiTrackFeedBackRigidBody rclcpp geometry_msgs
+                          fsc_autopilot_ros2_msgs)
 
 # add optitrackPublisher.cpp
 add_library(OptiTrackPublisher src/lib/OptiTrackPublisher.cpp)
-target_link_libraries(OptiTrackPublisher 
-  ${cpp_typesupport_target} 
-  Eigen3::Eigen
-)
+target_link_libraries(OptiTrackPublisher Eigen3::Eigen)
 target_include_directories(OptiTrackPublisher PUBLIC include/)
-ament_target_dependencies(OptiTrackPublisher rclcpp geometry_msgs)
+ament_target_dependencies(OptiTrackPublisher rclcpp geometry_msgs
+                          fsc_autopilot_ros2_msgs)
 
 # add broadcast_position_velocity.cpp
 add_executable(broadcast_position_velocity src/broadcast_position_velocity.cpp)
-target_link_libraries(broadcast_position_velocity 
-  ${rclcpp_LIBRARIES}
-  ${rosidl_default_runtime_LIBRARIES} 
-  OptiTrackFeedBackRigidBody
-  OptiTrackPublisher
-)
-target_link_libraries(broadcast_position_velocity ${cpp_typesupport_target})
-ament_target_dependencies(broadcast_position_velocity rclcpp geometry_msgs)
+target_link_libraries(broadcast_position_velocity OptiTrackFeedBackRigidBody
+                      OptiTrackPublisher)
+ament_target_dependencies(broadcast_position_velocity rclcpp geometry_msgs
+                          fsc_autopilot_ros2_msgs)
 
 set(_ob_list
   OptiTrackFeedBackRigidBody

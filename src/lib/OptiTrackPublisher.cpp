@@ -4,7 +4,7 @@ OptiTrackPublisher::OptiTrackPublisher(const char* TopicName,
                                        rclcpp::Node& node, 
                                        unsigned int buffersize)
 {
-    publisher_ = node.create_publisher<optitrack_broadcast::msg::Mocap>(TopicName, buffersize);
+    publisher_ = node.create_publisher<fsc_autopilot_ros2_msgs::msg::Mocap>(TopicName, buffersize);
 }
 OptiTrackPublisher::~OptiTrackPublisher()
 {
